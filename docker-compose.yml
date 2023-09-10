@@ -1,0 +1,32 @@
+services:
+  app:
+    container_name: nest-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: ./
+        target: /workspace/app/
+    working_dir: "/workspace/app"
+    environment:
+      TZ: "Asia/Tokyo"
+    ports:
+      - "3000:3000"
+    tty: true
+    stdin_open: true
+    command: /bin/bash
+  db:
+    container_name: db_postgresql
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      POSTGRES_DB: postgres
+      TZ: "Asia/Tokyo"
+    hostname: postgres
